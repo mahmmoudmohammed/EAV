@@ -18,17 +18,14 @@ artisan:
 	$(DC) exec $(APP) php artisan $(filter-out $@,$(MAKECMDGOALS))
 
 install: build up
-	@echo "Install"
+	@echo "prepare env"
 	cp .env.example .env || true
-	$(DC) exec $(APP) composer install
-	@echo "Installed"
 
 	@echo "Generate app key"
 	$(DC) exec $(APP) php artisan key:generate
-	$(DC) exec $(APP) php artisan config:cache
 
 	@echo "Database Migration"
-	$(DC) exec $(APP) php artisan migrate
+	$(DC) exec $(APP) php artisan migrate:refresh
 	$(DC) exec $(APP) php artisan optimize:clear
 
 	@echo "Seeding data"

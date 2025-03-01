@@ -1,4 +1,5 @@
 FROM php:8.3-fpm
+WORKDIR /var/www/html
 
 RUN apt-get update --fix-missing && apt-get install -y \
     git \
@@ -13,14 +14,16 @@ RUN apt-get upgrade -y
 
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/html
+RUN useradd -G www-data,root -u 1000 -d /home/laravel laravel
+RUN mkdir -p /home/laravel/.composer && \
+    chown -R laravel:laravel /home/laravel
 
-COPY . /var/www/html
+RUN chown -R laravel:laravel /var/www/html
 
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap
+USER laravel
 
-
+COPY --chown=laravel:laravel . .
+RUN composer install
 
 EXPOSE 8000
 
