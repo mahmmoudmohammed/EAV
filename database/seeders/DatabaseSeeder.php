@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Http\Domains\User\Model\User;
 use Illuminate\Database\Seeder;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,11 +12,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            UserSeeder::class,
+            AttributeSeeder::class,
+            ProjectSeeder::class,
+            TimesheetSeeder::class,
         ]);
     }
 }
