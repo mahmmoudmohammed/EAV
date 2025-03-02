@@ -3,32 +3,34 @@
 namespace App\Http\Repository;
 
 use App\Http\Helpers\ApiDesignTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-abstract class BaseRepository
+abstract class BaseRepository implements BaseCrudInterface
 {
     use ApiDesignTrait;
 
     protected abstract function model(): string|Model;
 
-    public function create(array $data): model
+    public function create(array $data): Model
     {
         return $this->model()::create($data);
     }
 
 
-    public function getById(int $id): model|bool
+    public function getById(int $id): Model|bool
     {
         return $this->model()::where('id', $id)->first() ?: false;
     }
 
-    public function update(model $model, array $data): Model
+    public function update(Model $model, array $data): Model
     {
         $model->update($data);
         return $model->refresh();
     }
 
-    public function delete(model $model): bool|null
+    public function delete(Model $model): bool|null
     {
         return $model->delete();
     }
@@ -37,6 +39,11 @@ abstract class BaseRepository
     {
         $perPage ??= 15;
         return max($minPerPage, min($maxPerPage, $perPage));
+    }
+
+    public function list(Builder $builder): LengthAwarePaginator
+    {
+        return $builder->paginate($this::paginationLimit(request('per_page', config('app.pagination'))));
     }
 
 }

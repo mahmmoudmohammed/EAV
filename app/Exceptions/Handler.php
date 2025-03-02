@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -36,8 +37,7 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (\PDOException $e) {
-
+        $this->reportable(function (QueryException $e) {
             if (!config('app.debug')) {
                 Log::channel('database')->error(message: $e->getMessage(), context:$this->onDebug($e));
                 return response()->json([

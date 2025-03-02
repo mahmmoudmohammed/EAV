@@ -17,12 +17,12 @@ class UserRepository extends BaseRepository implements UserInterface
         return User::class;
     }
 
-    public function create($data):model
+    public function create(array $data):model
     {
         $data['password'] = Hash::make($data['password']);
         return parent::create($data);
     }
-    public function update(model $model, $data): model
+    public function update(model $model, array $data): model
     {
         if($data['password']) {
             $data['password'] = Hash::make($data['password']);

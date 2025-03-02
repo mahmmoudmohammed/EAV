@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Domains\Project\Model;
 
+use App\Http\Domains\EAV\Model\Attribute;
 use App\Http\Domains\EAV\Model\AttributeValue;
 use App\Http\Domains\TimeSheet\Model\Timesheet;
 use App\Http\Domains\User\Model\User;
@@ -32,5 +33,20 @@ class Project extends Model
     public function attributeValues()
     {
         return $this->morphMany(AttributeValue::class, 'entity');
+    }
+    public function getAttributeValues()
+    {
+        if (!$this->relationLoaded('attributeValues')) {
+            return [];
+        }
+        return $this->attributeValues->map(function (AttributeValue $value) {
+            if (!$value->relationLoaded('attribute')) {
+                return [];
+            }
+            return [
+                'name'           => $value->attribute->name,
+                'value'         => $value->value,
+            ];
+        });
     }
 }

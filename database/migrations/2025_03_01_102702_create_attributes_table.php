@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->tinyInteger('type');
+            $table->string('type');
             $table->json('options')->nullable(); /* For select type options */
             $table->timestamps();
         });
