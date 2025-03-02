@@ -8,6 +8,7 @@ use App\Http\Domains\User\Filter\UserFilter;
 use App\Http\Domains\User\Contract\UserInterface;
 use App\Http\Domains\User\Model\User;
 use App\Http\Domains\User\Request\CreateUserRequest;
+use App\Http\Domains\User\Request\UpdateUserRequest;
 use App\Http\Domains\User\Resource\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,11 +16,9 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    private $repository;
 
-    public function __construct(UserInterface $user)
+    public function __construct(private UserInterface $repository)
     {
-        $this->repository = $user;
     }
     public function store(CreateUserRequest $request)
     {
@@ -30,23 +29,22 @@ class UserController extends Controller
             status: 201
         );
     }
-
-    public function find(User $model): UserResource|JsonResponse
+    public function update(UpdateUserRequest $request,User $model)
     {
-        $user = $this->repository->getById($model->id);
-        if (!$user)
-            return $this->error(__('common.not_found'), 404);
-        $user->load('details');
+        $model = $this->repository->update($model, $request->validated());
 
-        return $this->responseResource(
-            UserResource::make($user),
-        );
+        return $this->responseResource(UserResource::make($model));
+    }
+
+    public function show(User $model): UserResource|JsonResponse
+    {
+        return $this->responseResource(UserResource::make($model));
     }
 
     public function delete(User $model): JsonResponse
     {
-        $deleted = $this->repository->delete($model->id);
-        if (1 > $deleted)
+        $deleted = $this->repository->delete($model);
+        if (!$deleted)
             return $this->error(__('common.not_found'), 404);
 
         return $this->success();

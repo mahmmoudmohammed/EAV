@@ -28,9 +28,9 @@ abstract class BaseRepository
         return $model->refresh();
     }
 
-    public function delete(int $id): int
+    public function delete(model $model): bool|null
     {
-        return $this->model()::where('id', $id)->delete();
+        return $model->delete();
     }
 
     public static function paginationLimit($perPage, $minPerPage = 5, $maxPerPage = 100)

@@ -23,6 +23,7 @@ Route::name('user.')
 
 Route::middleware(['auth:api'])->name('user.')->group(function () {
     Route::get('logout', [UserController::class, 'logout']);
+    Route::apiResource('users', UserController::class);
 });
 
 /*

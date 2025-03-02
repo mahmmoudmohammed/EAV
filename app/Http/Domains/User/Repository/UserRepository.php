@@ -19,16 +19,19 @@ class UserRepository extends BaseRepository implements UserInterface
 
     public function create($data):model
     {
-        return parent::create([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password'])
-        ]);
+        $data['password'] = Hash::make($data['password']);
+        return parent::create($data);
+    }
+    public function update(model $model, $data): model
+    {
+        if($data['password']) {
+            $data['password'] = Hash::make($data['password']);
+        }
+        return parent::update($model, $data);
     }
     public function list(Builder $builder): LengthAwarePaginator
     {
-        return $builder::paginate($this::paginationLimit(request('per_page', config('app.pagination'))));
+        return $builder->paginate($this::paginationLimit(request('per_page', config('app.pagination'))));
     }
 
 }
