@@ -10,7 +10,6 @@ use App\Http\Domains\Project\Model\Project;
 use App\Http\Domains\Project\Request\CreateProjectRequest;
 use App\Http\Domains\Project\Request\UpdateProjectRequest;
 use App\Http\Domains\Project\Resource\ProjectResource;
-use App\Http\Domains\User\Model\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -41,7 +40,7 @@ class ProjectController extends Controller
         return $this->responseResource(ProjectResource::make($project->load(['users','attributeValues.attribute'])));
     }
 
-    public function delete(User $project): JsonResponse
+    public function delete(Project $project): JsonResponse
     {
         $deleted = $this->repository->delete($project);
         if (!$deleted)

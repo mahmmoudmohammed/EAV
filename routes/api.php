@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Domains\EAV\AttributeController;
 use App\Http\Domains\Project\ProjectController;
 use App\Http\Domains\User\AuthController;
 use App\Http\Domains\User\UserController;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::name('user.')
-    // ->middleware('throttle:5,60')
+    ->middleware('throttle:5,60')
     ->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -38,4 +39,17 @@ Route::middleware(['auth:api'])->name('user.')->group(function () {
 
 Route::middleware(['auth:api'])->name('project.')->group(function () {
     Route::apiResource('projects', ProjectController::class);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Attribute routes
+|--------------------------------------------------------------------------
+|
+| Filtration and resource actions.
+|
+*/
+
+Route::middleware(['auth:api'])->name('attribute.')->group(function () {
+    Route::apiResource('attributes', AttributeController::class);
 });

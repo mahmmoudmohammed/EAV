@@ -8,4 +8,8 @@ enum AttributeTypeEnum: string
     case DATE = 'date';
     case NUMBER = 'number';
     case SELECT = 'select';
+    public static function values(): array
+    {
+        return collect(self::cases())->pluck('value')->toArray();
+    }
 }
