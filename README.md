@@ -68,7 +68,8 @@ consists of the following components:
 ---
 
 ## API Documentation
-
+- Open postman and then try to import [time-sheet.postman_collection.json](time-sheet.postman_collection.json) collection file.
+- Now you can start sending your request (`register`, `login`, `list`, ...) 
 ### Authentication
 
 #### Register a New User
