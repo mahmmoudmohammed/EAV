@@ -137,27 +137,46 @@ consists of the following components:
 
 #### Filter Projects by Attributes
 
-- **Endpoint**: `GET /api/projects?filters[department]=IT&filters[start_date]=2023-10-01`
+- **Endpoint**: `GET api/projects/?department=tech&status=1&name=third&start_date=2023-10-01`
 - **Response**:
-    ```json
-    [
-        {
-            "id": 1,
-            "name": "New Project",
-            "status": "active",
-            "attributes": [
-                {
+  ```json
+  {
+        "data": [ 
+            {
+                "id": 3,
+                "name": "Third Project",
+                "status": 1,
+                "created_at": "2025-03-02T21:29:36.000000Z",
+                "updated_at": "2025-03-02T22:42:11.000000Z",
+                "users": [
+                    {
+                        "id": 2,
+                        "first_name": "John",
+                        "last_name": "Doe",
+                        "email": "john@example.com",
+                        "created_at": "2025-03-02T20:42:30.000000Z",
+                        "updated_at": "2025-03-02T20:42:30.000000Z"
+                    }
+                ],
+                "extra_dynamic_attributes": [
+                    {
                     "name": "department",
-                    "value": "IT"
-                },
-                {
-                    "name": "start_date",
-                    "value": "2023-10-01"
-                }
-            ]
-        }
-    ]
-    ```
+                    "value": "Tech"
+                    },
+                    {
+                        "name": "start_date",
+                        "value": "2023-03-21"
+                    },
+                    {
+                        "name": "end_date",
+                        "value": "2023-09-10"
+                    }
+  
+                ]
+            }
+        ]
+  }
+  ```
 
 ---
 
