@@ -31,16 +31,15 @@ class AuthRepository extends BaseRepository implements AuthInterface
 
     public function login(array $data): Model|null
     {
-        $user = $this->getByEmail($data['email'])?->first();
-
+        $user = $this->getOneByEmail($data['email']);
         if (!$user || !Hash::check($data['password'], $user->password))
             return null;
         return $user;
     }
 
-    public function getByEmail(string $email): ?model
+    public function getOneByEmail(string $email): ?model
     {
-        return $this->user->where('email', $email)->first() ?: null;
+        return $this->user->where('email','like', $email)->get()?->first();
     }
 
 }

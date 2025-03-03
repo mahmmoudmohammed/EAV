@@ -31,5 +31,8 @@ install: build up
 	@echo "Seeding data"
 	$(DC) exec $(APP) php artisan db:seed
 
+	@echo "generate passport client "
+	$(DC) exec $(APP) php artisan passport:client --personal
+
 %:
 	@:
