@@ -13,9 +13,6 @@ class AttributeRepository extends BaseRepository implements AttributeInterface
         return Attribute::class;
     }
 
-    /**
-     * @throws \Exception
-     */
     public function load(Attribute $model, array|string $relations): Attribute
     {
         return $model->load($relations);

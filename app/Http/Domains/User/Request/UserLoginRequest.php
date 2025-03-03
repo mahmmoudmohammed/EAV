@@ -31,8 +31,6 @@ class UserLoginRequest extends FormRequest
 
     public function messages()
     {
-        return [
-            //TODO:: Any Customized message
-             ];
+        return [];
     }
 }
