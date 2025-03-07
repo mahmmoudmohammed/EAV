@@ -84,7 +84,6 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
-    'pagination' => env('PAGINATION', 15),
 
     /*
     |--------------------------------------------------------------------------
@@ -106,6 +105,8 @@ return [
             explode(',', env('APP_PREVIOUS_KEYS', ''))
         ),
     ],
+
+    'pagination' => env('PAGINATION', 15),
 
     /*
     |--------------------------------------------------------------------------

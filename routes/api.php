@@ -41,6 +41,9 @@ Route::middleware(['auth:api'])->name('project.')->group(function () {
     Route::apiResource('projects', ProjectController::class);
 });
 
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Attribute routes

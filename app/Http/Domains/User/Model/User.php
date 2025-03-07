@@ -32,7 +32,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
     public function projects()
     {
         return $this->belongsToMany(Project::class);
@@ -42,4 +41,5 @@ class User extends Authenticatable
     {
         return $this->hasMany(Timesheet::class);
     }
+
 }

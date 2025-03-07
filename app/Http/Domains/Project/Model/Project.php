@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Domains\Project\Model;
 
-use App\Http\Domains\EAV\Model\Attribute;
 use App\Http\Domains\EAV\Model\AttributeValue;
 use App\Http\Domains\TimeSheet\Model\Timesheet;
 use App\Http\Domains\User\Model\User;

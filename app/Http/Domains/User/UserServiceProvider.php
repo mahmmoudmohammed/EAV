@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Domains\User;
 
+
 use App\Http\Domains\User\Contract\AuthInterface;
 use App\Http\Domains\User\Contract\UserInterface;
 use App\Http\Domains\User\Repository\AuthRepository;

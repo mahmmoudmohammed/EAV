@@ -7,5 +7,4 @@ use App\Http\Helpers\ApiDesignTrait;
 abstract class Controller
 {
     use ApiDesignTrait;
-
 }
