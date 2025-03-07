@@ -40,3 +40,18 @@ Route::middleware(['auth:api'])->name('project.')->group(function () {
     Route::apiResource('projects', ProjectController::class);
 });
 
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Attribute routes
+|--------------------------------------------------------------------------
+|
+| Filtration and resource actions.
+|
+*/
+
+Route::middleware(['auth:api'])->name('attribute.')->group(function () {
+    Route::apiResource('attributes', AttributeController::class);
+});
