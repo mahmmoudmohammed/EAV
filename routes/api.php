@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Domains\Project\ProjectController;
 use App\Http\Domains\User\AuthController;
 use App\Http\Domains\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -24,3 +25,18 @@ Route::middleware(['auth:api'])->name('user.')->group(function () {
     Route::get('logout', [AuthController::class, 'logout']);
     Route::apiResource('users', UserController::class);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Project routes
+|--------------------------------------------------------------------------
+|
+| Filtration and resource actions.
+|
+*/
+
+
+Route::middleware(['auth:api'])->name('project.')->group(function () {
+    Route::apiResource('projects', ProjectController::class);
+});
+
