@@ -2,6 +2,8 @@
 
 namespace App\Http\Domains\User\Model;
 
+use App\Http\Domains\Project\Model\Project;
+use App\Http\Domains\TimeSheet\Model\Timesheet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -29,6 +31,15 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class);
+    }
+
+    public function timesheets()
+    {
+        return $this->hasMany(Timesheet::class);
     }
 
 }

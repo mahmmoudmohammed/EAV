@@ -106,6 +106,8 @@ return [
         ),
     ],
 
+    'pagination' => env('PAGINATION', 15),
+
     /*
     |--------------------------------------------------------------------------
     | Maintenance Mode Driver
