@@ -3,6 +3,7 @@
 namespace App\Http\Domains\Order\Filter;
 
 use App\Filter\FilterInterface;
+use App\Http\Domains\Order\Model\OrderStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 
 class Status implements FilterInterface
@@ -16,6 +17,6 @@ class Status implements FilterInterface
      */
     public static function apply(Builder $builder, $value): Builder
     {
-        return $builder->where('status', $value);
+        return $builder->where('status', OrderStatusEnum::tryFrom($value));
     }
 }

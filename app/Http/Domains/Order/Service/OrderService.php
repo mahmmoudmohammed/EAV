@@ -6,7 +6,6 @@ use App\Http\Domains\Order\Model\Order;
 use App\Http\Domains\Order\Model\OrderLog;
 use App\Http\Domains\Order\Model\OrderStatusEnum;
 use App\Http\Domains\Order\Model\Product;
-use Illuminate\Support\Facades\DB;
 use Exception;
 
 class OrderService
@@ -18,67 +17,54 @@ class OrderService
      */
     public function generateOrderNumber()
     {
-        return DB::transaction(function () {
-            $lastOrder = Order::orderBy('id', 'desc')->first();
-            $baseNumber = 'ORD-' . date('Ymd') . '-';
-            $nextNumber = 1;
-            if ($lastOrder) {
-                preg_match('/ORD-\d{8}-(\d+)/', $lastOrder->order_number, $matches);
+        $lastOrder = Order::orderBy('id', 'desc')->first();
+        $baseNumber = 'ORD-' . date('Ymd') . '-';
+        $nextNumber = 1;
+        if ($lastOrder) {
+            preg_match('/ORD-\d{8}-(\d+)/', $lastOrder->order_number, $matches);
 
-                if (isset($matches[1])) {
-                    $nextNumber = intval($matches[1]) + 1;
-                } else {
-                    $nextNumber = 1;
-                }
+            if (isset($matches[1])) {
+                $nextNumber = intval($matches[1]) + 1;
             }
-            return $baseNumber . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
-        }, 3);
+        }
+        return $baseNumber . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
     }
 
-    /**
-     * Create a new order with items.
-     *
-     * @param array $orderData
-     * @return Order
-     */
     public function createOrder(array $orderData)
     {
-        return DB::transaction(function () use ($orderData) {
-            $orderData['user_id'] = auth()->user()->id;
-            $orderData['order_number'] = $this->generateOrderNumber();
-            $orderData['status'] = OrderStatusEnum::DRAFT;
-            $order = Order::create($orderData);
+        $orderData['user_id'] = auth()->user()->id;
+        $orderData['order_number'] = $this->generateOrderNumber();
+        $orderData['status'] = OrderStatusEnum::DRAFT;
+        $order = Order::create($orderData);
 
-            $totalAmount = 0;
+        $totalAmount = 0;
 
-            foreach ($orderData['items'] as $itemData) {
-                $item = Product::find($itemData['product_id']);
-                if(!$item){
-                    continue;
-                }
-                $subtotal = $itemData['quantity'] * $item->price;
-                $totalAmount += $subtotal;
-
-                $order->items()->create([
-                    'product_id' => $item->id,
-                    'quantity' => $itemData['quantity'],
-                    'price' => $item->price,
-                    'subtotal' => $subtotal
-                ]);
+        foreach ($orderData['items'] as $itemData) {
+            $item = Product::find($itemData['product_id']);
+            if (!$item) {
+                continue;
             }
-            $order->total_amount = $totalAmount;
-            $order->save();
-            $this->addHistory($order, OrderStatusEnum::DRAFT, 'Order created');
+            $subtotal = $itemData['quantity'] * $item->price;
+            $totalAmount += $subtotal;
 
-            // Check if order requires approval
-            if ($order->requiresApproval()) {
-                $this->submitForApproval($order);
-            } else {
-                $this->approveOrder($order);
-            }
+            $order->items()->create([
+                'product_id' => $item->id,
+                'quantity' => $itemData['quantity'],
+                'price' => $item->price,
+                'subtotal' => $subtotal
+            ]);
+        }
+        $order->total_amount = $totalAmount;
+        $order->save();
+        $this->addHistory($order, OrderStatusEnum::DRAFT, 'Order created');
 
-            return $order->fresh(['items', 'history']);
-        });
+        if ($order->requiresApproval()) {
+            $this->submitForApproval($order);
+        } else {
+            $this->approveOrder($order);
+        }
+
+        return $order->fresh(['items', 'history']);
     }
 
     public function submitForApproval(Order $order)
@@ -105,12 +91,20 @@ class OrderService
         ]);
     }
 
-    /**
-     * Calculate the order total.
-     *
-     * @param Order $order
-     * @return float
-     */
+    public function approveOrder(Order $order, string $notes = null)
+    {
+        if (!$order->isPendingApproval()) {
+            throw new Exception('Only orders with pending approval status can be approved');
+        }
+
+        $order->status = OrderStatusEnum::APPROVED;
+        $order->save();
+
+        $this->addHistory($order, OrderStatusEnum::APPROVED, $notes ?: 'Order approved');
+
+        return $order->fresh();
+    }
+
     public function calculateTotal(Order $order)
     {
         return $order->items->sum('subtotal');

@@ -38,6 +38,7 @@ class UserController extends Controller
 
     public function show(User $model): UserResource|JsonResponse
     {
+        $model = $this->repository->getById($model->id);
         return $this->responseResource(UserResource::make($model));
     }
 
