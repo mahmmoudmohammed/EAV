@@ -36,7 +36,6 @@ class OrderService
         $orderData['order_number'] = $this->generateOrderNumber();
         $orderData['status'] = OrderStatusEnum::DRAFT;
         $order = Order::create($orderData);
-
         $totalAmount = 0;
 
         foreach ($orderData['items'] as $itemData) {

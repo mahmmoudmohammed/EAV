@@ -30,6 +30,7 @@ class OrderRepository extends BaseRepository implements OrderInterface
         DB::beginTransaction();
         try {
             $model = $this->orderService->createOrder($data);
+            DB::commit();
             return $model;
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -43,6 +44,12 @@ class OrderRepository extends BaseRepository implements OrderInterface
         return parent::list($builder->with(['items', 'history']));
     }
 
+    public function getHistory(Order $order, array|string $relations = null)
+    {
+        if($relations)
+            $order->load($relations);
+        return $order->history()->orderBy('created_at', 'desc');
+    }
     public function load(Order $order, array|string $relations): Order
     {
         return $order->load($relations);

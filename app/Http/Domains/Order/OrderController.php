@@ -47,7 +47,6 @@ class OrderController extends Controller
 
     public function submitForApproval(Order $order)
     {
-
         $order = $this->service->submitForApproval($order);
         $order = $this->repository->load($order, ['items', 'history']);
 
@@ -55,7 +54,7 @@ class OrderController extends Controller
     }
     public function history(Order $order): JsonResponse
     {
-        $orderWithHistory = $this->service->getHistory($order);
+        $orderWithHistory = $this->repository->getHistory($order,['items']);
         return $this->responseResource(OrderResource::make($orderWithHistory));
 
     }
